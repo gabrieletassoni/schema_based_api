@@ -7,11 +7,11 @@ require "schema_based_api/version"
 Gem::Specification.new do |spec|
   spec.name        = "schema_based_api"
   spec.version     = SchemaBasedApi::VERSION
-  spec.authors     = [""]
+  spec.authors     = ["Gabriele Tassoni"]
   spec.email       = ["gabriele.tassoni@gmail.com"]
-  spec.homepage    = "TODO"
-  spec.summary     = "TODO: Summary of SchemaBasedApi."
-  spec.description = "TODO: Description of SchemaBasedApi."
+  spec.homepage    = "https://github.com/gabrieletassoni/schema_based_api"
+  spec.summary     = "Convention based RoR engine which uses DB schema introspection to create REST APIs."
+  spec.description = "Ruby on Rails REST APIs built by convention using the DB schema as the foundation."
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -26,12 +26,12 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   spec.add_dependency "rails", "~> 6.0.2", ">= 6.0.2.1"
+
   spec.add_dependency "thecore_auth", "~> 2.1"
 
-  s.add_dependency 'ransack', "~> 2.3"
-  s.add_dependency 'active_hash_relation', "~> 1.4"
-  s.add_dependency 'rack-cors', "~> 1.1"
-  # s.add_dependency 'therubyracer', "~> 0.12"
+  spec.add_dependency 'ransack', "~> 2.3"
+  spec.add_dependency 'active_hash_relation', "~> 1.4"
+  spec.add_dependency 'rack-cors', "~> 1.1"
 
   spec.add_development_dependency "sqlite3"
 end
