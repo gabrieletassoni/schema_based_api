@@ -14,7 +14,9 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'thecore_auth', require: 'thecore_auth', path: '../thecore_auth'
+gem 'thecore_auth_commons', require: 'thecore_auth_commons', path: '../thecore_auth_commons'
+gem 'devise'
+gem 'devise-jwt'
 gem 'ransack'
 gem 'active_hash_relation'
 gem 'rack-cors'

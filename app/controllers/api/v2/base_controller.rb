@@ -1,4 +1,4 @@
-class Api::V1::BaseController < ActionController::API
+class Api::V2::BaseController < ActionController::API
     include ActionController::MimeResponds
     
     respond_to :json
@@ -144,14 +144,6 @@ class Api::V1::BaseController < ActionController::API
             render json: json_out, status: status #(@json_attrs || {})
         end
         
-        # def count
-        #   # find the records
-        #   @q = (@model.column_names.include?("user_id") ? @model.where(user_id: current_user.id) : @model).ransack(params[:q])
-        #   @records_all = @q.result(distinct: true)
-        #   # if you ask for count, then return a json object with just the number of objects
-        #   return render json: {count: @records_all.count}.to_json
-        # end
-        
         def search
             index
             render :index
@@ -277,8 +269,6 @@ class Api::V1::BaseController < ActionController::API
             @current_user = user
         end
         
-        # private
-        
         def find_record
             # find the records
             @record = @model.column_names.include?("user_id") ? @model.where(id: (@record_id.presence || params[:id]), user_id: current_user.id).first : @model.find((@record_id.presence || params[:id]))
@@ -298,5 +288,7 @@ class Api::V1::BaseController < ActionController::API
         def json_attrs
             ((@model.json_attrs.presence || @json_attrs.presence || {}) rescue {})
         end
+        
+        
     end
     

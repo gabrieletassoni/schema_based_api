@@ -1,16 +1,16 @@
-class Api::V1::InfoController < Api::V1::BaseController
+class Api::V2::InfoController < Api::V2::BaseController
   # Info uses a different auth method: username and password
   skip_before_action :authenticate_user!, only: [:version], raise: false
 
-  # api :GET, '/api/v1/info/version', "Just prints the APPVERSION."
+  # api :GET, '/api/v2/info/version', "Just prints the APPVERSION."
   # api!
   def version
     render json: {
-      version: (APPVERSION rescue "No version specified for this app, please add an APPVERSION constant to an initializer to start versioning the application.")
+      version: SchemaBasedApi::VERSION
     }.to_json, status: 200
   end
 
-  # api :GET, '/api/v1/info/token'
+  # api :GET, '/api/v2/info/token'
   # it returns the AUTH_TOKEN, email and id of the user which performed the authentication."
   # api!
   # def token
@@ -20,18 +20,18 @@ class Api::V1::InfoController < Api::V1::BaseController
   #   }.to_json, status: 200
   # end
 
-  # api :GET, '/api/v1/info/available_roles'
+  # api :GET, '/api/v2/info/available_roles'
   # it returns the roles list
   def available_roles
     render json: ROLES.to_json, status: 200
   end
 
-  # GET '/api/v1/info/translations'
+  # GET '/api/v2/info/translations'
   def translations
     render json: I18n.t(".", locale: (params[:locale].presence || :it)).to_json, status: 200
   end
 
-  # GET '/api/v1/info/schema'
+  # GET '/api/v2/info/schema'
   def schema
     pivot = {}
     # if Rails.env.development?
@@ -58,7 +58,7 @@ class Api::V1::InfoController < Api::V1::BaseController
     render json: pivot.to_json, status: 200
   end
 
-  # GET '/api/v1/info/dsl'
+  # GET '/api/v2/info/dsl'
   def dsl
     pivot = {}
     # if Rails.env.development?

@@ -1,5 +1,6 @@
-class Api::V1::UsersController < Api::V1::BaseController
+class Api::V2::UsersController < Api::V2::BaseController
   load_and_authorize_resource
+  # before_action :authenticate_user!
   
   before_action :check_demoting, only: [:update, :destroy]
 

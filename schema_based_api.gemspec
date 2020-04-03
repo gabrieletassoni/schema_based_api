@@ -27,8 +27,10 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", "~> 6.0.2", ">= 6.0.2.1"
 
-  spec.add_dependency "thecore_auth", "~> 2.1"
-  spec.add_dependency "bcrypt", "~> 3.1"
+  spec.add_dependency "thecore_auth_commons", "~> 2.1"
+
+  spec.add_dependency "devise", "~> 4.7"
+  spec.add_dependency 'devise-jwt', "~> 0.6"
 
   spec.add_dependency 'ransack', "~> 2.3"
   spec.add_dependency 'active_hash_relation', "~> 1.4"
