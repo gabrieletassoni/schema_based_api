@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     namespace :api do
         namespace :v2, defaults: { format: :json } do
             devise_for :users, defaults: { format: :json },
-            class_name: 'ApiUser',
+            # class_name: 'ApiUser',
             skip: [:registrations, :invitations, :passwords, :confirmations, :unlocks],
             path: '',
             path_names: { sign_in: 'login', sign_out: 'logout' }
@@ -14,7 +14,7 @@ Rails.application.routes.draw do
                 get 'login', to: 'devise/sessions#new'
                 delete 'logout', to: 'devise/sessions#destroy'
             end
-            
+
             namespace :info do
                 get :version
                 get :available_roles

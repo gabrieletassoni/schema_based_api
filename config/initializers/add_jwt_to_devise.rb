@@ -33,7 +33,7 @@ Devise.setup do |config|
         # For HTML requests, I want users to go to the web interface at a different 
         # endpoint, “/signin”, so if someone visits /api/v2/login with an HTML 
         # request instead of JSON, I want devise-jwt to ignore it.
-        jwt.request_formats = { api_user: [:json] 
+        jwt.request_formats = { user: [:json] }
     end
     config.navigational_formats = ['*/*', :html, :json]
 end
