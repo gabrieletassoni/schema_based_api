@@ -4,10 +4,6 @@ class Api::V2::UsersController < Api::V2::ApplicationController #Api::V2::BaseCo
   # before_action :authenticate_user!
   before_action :check_demoting, only: [ :update, :destroy ]
   
-  def index
-    render json: { prova: true }, status: 200
-  end
-  
   private
   
   def check_demoting
