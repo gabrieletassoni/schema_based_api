@@ -1,9 +1,13 @@
-class Api::V2::UsersController < Api::V2::BaseController
-  load_and_authorize_resource
+class Api::V2::UsersController < Api::V2::ApplicationController #Api::V2::BaseController
+  # # CanCanCan
+  # load_and_authorize_resource
   # before_action :authenticate_user!
+  before_action :check_demoting, only: [ :update, :destroy ]
   
-  before_action :check_demoting, only: [:update, :destroy]
-
+  def index
+    render json: { prova: true }, status: 200
+  end
+  
   private
   
   def check_demoting
@@ -11,6 +15,6 @@ class Api::V2::UsersController < Api::V2::BaseController
   end
   
   def request_params
-    params.require(:user).permit(:email, :roles, :password, :password_confirmation, :username, :number_of_instances_purchased, :admin, :locked).delete_if{ |_,v| v.nil? }
+    params.require(:user).permit!.delete_if{ |_,v| v.nil? }
   end
 end

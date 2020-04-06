@@ -1,44 +1,44 @@
-require 'ransack'
+# require 'ransack'
 
 Rails.application.routes.draw do
     # REST API (Stateless)
     namespace :api do
         namespace :v2, defaults: { format: :json } do
-            devise_for :users, defaults: { format: :json },
-            # class_name: 'ApiUser',
-            skip: [:registrations, :invitations, :passwords, :confirmations, :unlocks],
-            path: '',
-            path_names: { sign_in: 'login', sign_out: 'logout' }
+            # devise_for :user
 
-            devise_scope :user do
-                get 'login', to: 'devise/sessions#new'
-                delete 'logout', to: 'devise/sessions#destroy'
-            end
+            resources :users, only: [:index]
 
-            namespace :info do
-                get :version
-                get :available_roles
-                get :translations
-                get :schema
-                get :dsl
-            end
+            post "authenticate" => "authentication#authenticate"
+            # post "user_token" => 'user_token#create'
+
+            # resources :users
             
-            resources :users, only: [:index, :create, :show, :update, :destroy] do
-                match 'search' => 'users#search', via: [:get, :post], as: :search, on: :collection
-            end
-            
-            namespace :base do
-                get :check
-                post :check
-                put :check
-                delete :check
-            end
-            
-            # Catchall routes
-            get '*path', to: 'base#check'
-            post '*path', to: 'base#check'
-            put '*path', to: 'base#check'
-            delete '*path', to: 'base#check'
+            # # # Catchall routes
+            # # get '*path', to: 'base#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }
+            # # # # GET :controller/:custom_action
+            # # # get '*path', to: 'base#custom_index', constraints: lambda { |request| request.path.split("/").second.to_i.zero? }
+            # # get '*path', to: 'base#show'#, constraints: lambda { |request| 
+            # # #     path = request.path.split("/")
+            # # #     !path.second.to_i.zero? && path.third.blank? 
+            # # # }
+            # # # # GET :controller/:id/:custom_action
+            # # # get '*path', to: 'base#custom_show', constraints: lambda { |request| 
+            # # #     path = request.path.split("/")
+            # # #     !path.second.to_i.zero? && !path.third.blank?
+            # # # }
+            # # post '*path', to: 'base#create'#, constraints: lambda { |request| path.second.blank? }
+            # # # # POST :controller/:custom_action
+            # # # post '*path', to: 'base#custom_create', constraints: lambda { |request| path.second.to_i.zero? }
+            # # put '*path', to: 'base#update'#, constraints: lambda { |request| 
+            # # #     path = request.path.split("/")
+            # # #     !path.second.to_i.zero? && path.third.blank?
+            # # # }
+            # # # PUT :controller/:id/:custom_action
+            # # put '*path', to: 'base#custom_update'#, constraints: lambda { |request| 
+            # # #     path = request.path.split("/")
+            # # #     !path.second.to_i.zero? && !path.third.blank?
+            # # # }
+            # # delete '*path', to: 'base#destroy'
         end
     end
 end
