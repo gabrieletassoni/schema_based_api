@@ -15,11 +15,14 @@ class Api::V2::ApplicationController < ActionController::API
     rescue_from AuthenticateUser::AccessDenied, with: :unauthenticated!
     rescue_from ActionController::RoutingError, with: :not_found!
 
+    # Allows for usig POST body to build ransack's q
+    # POST :ctrl/search
     def search
         authorize! :search, @model
         index
     end
 
+    # GET :controller/
     def index
         # Rails.logger.debug params.inspect
         # find the records
