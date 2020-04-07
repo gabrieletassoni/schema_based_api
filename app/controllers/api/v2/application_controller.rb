@@ -1,12 +1,19 @@
 class Api::V2::ApplicationController < ActionController::API
     # CanCanCan
-    # load_and_authorize_resource
+    # include CanCan::ControllerAdditions
+    include ActiveHashRelation
+
     before_action :authenticate_request
     before_action :extract_model
+    before_action :find_record, only: [ :show, :destroy, :update ]
 
-    attr_reader :current_api_user
+    attr_accessor :current_user
 
-    # rescue_from NoMethodError, with: :not_found!
+    load_and_authorize_resource
+
+    rescue_from NoMethodError, with: :not_found!
+    rescue_from CanCan::AccessDenied, with: :unauthorized!
+    rescue_from AuthenticateUser::AccessDenied, with: :unauthenticated!
 
     def index
         # Rails.logger.debug params.inspect
@@ -36,12 +43,22 @@ class Api::V2::ApplicationController < ActionController::API
         render json: json_out, status: status #(@json_attrs || {})
     end
     
+    def show
+        result = @record.to_json(json_attrs)
+        render json: result, status: 200
+    end
+
+    # def current_user
+    #     # To comply with CanCanCan need for a current_user method in the controller
+    #     @current_user
+    # end
+
     private
     
     def authenticate_request
-        @current_api_user = AuthorizeApiRequest.call(request.headers).result
-        # render json: {  error: "This is not a authorized request." }, status: :unauthorized 
-        unauthenticated! unless @current_api_user
+        @current_user = AuthorizeApiRequest.call(request.headers).result
+        unauthenticated! unless @current_user
+        current_user = @current_user
     end
     
     # 
@@ -83,10 +100,7 @@ class Api::V2::ApplicationController < ActionController::API
     #     render :index
     # end
     
-    # def show
-    #     result = @record.to_json(json_attrs)
-    #     render json: result, status: 200
-    # end
+
     
     # def create
     #     @record =  @model.new(request_params)
@@ -135,17 +149,17 @@ class Api::V2::ApplicationController < ActionController::API
         return not_found! if (!@model.new.is_a? ActiveRecord::Base rescue false)
     end
     
-    def unauthenticated!
+    def unauthenticated! exception = StandardError.new
         response.headers['WWW-Authenticate'] = "Token realm=Application"
-        api_error status: 401, errors: [I18n.t("api.errors.bad_credentials", default: "Bad Credentials")]
+        api_error status: 401, errors: [I18n.t("api.errors.bad_credentials", default: "Bad Credentials"), exception.message]
     end
     
-    def unauthorized!
-        api_error status: 403, errors: [I18n.t("api.errors.unauthorized", default: "Unauthorized")]
+    def unauthorized! exception = StandardError.new
+        api_error status: 403, errors: [I18n.t("api.errors.unauthorized", default: "Unauthorized"), exception.message]
         return
     end
     
-    def not_found! exception
+    def not_found! exception = StandardError.new
         return api_error(status: 404, errors: [I18n.t("api.errors.not_found", default: "Not Found"), exception.message])
     end
     
@@ -157,7 +171,7 @@ class Api::V2::ApplicationController < ActionController::API
         api_error(status: 501, errors: [I18n.t("api.errors.no_method_error", default: "No Method Error")])
     end
     
-    def invalid! exception
+    def invalid! exception = StandardError.new
         api_error status: 422, errors: exception.record.errors
     end
     

@@ -1,4 +1,9 @@
 class AuthenticateUser
+    class AccessDenied < StandardError
+        def message
+            "Cannot authenticate user."
+        end
+    end
     prepend SimpleCommand
     
     def initialize(email, password)
@@ -16,16 +21,10 @@ class AuthenticateUser
     
     def api_user
         user = User.find_by_email(email)
-        unless user.present?
-            errors.add :message, "Invalid email / password"
-            return nil
-        end
+        raise AccessDenied unless user.present?
         
         # Verify the password. You can create a blank method for now.
-        unless user.authenticate(password)
-            errors.add :message, "Invalid email / password"
-            return nil
-        end
+        raise AccessDenied if user.authenticate(password).blank?
         
         return user
     end

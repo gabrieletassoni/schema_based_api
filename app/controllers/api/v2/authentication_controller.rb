@@ -1,4 +1,5 @@
 class Api::V2::AuthenticationController < Api::V2::ApplicationController
+    skip_load_and_authorize_resource
     skip_before_action :authenticate_request
     
     def authenticate

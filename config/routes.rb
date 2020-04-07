@@ -4,14 +4,9 @@ Rails.application.routes.draw do
     # REST API (Stateless)
     namespace :api do
         namespace :v2, defaults: { format: :json } do
-            # devise_for :user
-
-            resources :users, only: [:index]
+            resources :users
 
             post "authenticate" => "authentication#authenticate"
-            # post "user_token" => 'user_token#create'
-
-            # resources :users
             
             # # # Catchall routes
             # # get '*path', to: 'base#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }
