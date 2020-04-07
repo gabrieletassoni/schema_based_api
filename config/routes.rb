@@ -2,11 +2,12 @@
 
 Rails.application.routes.draw do
     # REST API (Stateless)
-    namespace :api do
-        namespace :v2, defaults: { format: :json } do
+    namespace :api, constraints: { format: :json } do
+        namespace :v2 do
             resources :users
 
             post "authenticate" => "authentication#authenticate"
+            post ":ctrl/search" => 'application#search'
             
             # # # Catchall routes
             # # get '*path', to: 'base#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }

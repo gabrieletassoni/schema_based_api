@@ -1,6 +1,4 @@
 class Api::V2::ApplicationController < ActionController::API
-    # CanCanCan
-    # include CanCan::ControllerAdditions
     include ActiveHashRelation
 
     before_action :authenticate_request
@@ -9,11 +7,18 @@ class Api::V2::ApplicationController < ActionController::API
 
     attr_accessor :current_user
 
-    load_and_authorize_resource
+    # Search will be authorized directly in the action
+    load_and_authorize_resource except: [:search]
 
     rescue_from NoMethodError, with: :not_found!
     rescue_from CanCan::AccessDenied, with: :unauthorized!
     rescue_from AuthenticateUser::AccessDenied, with: :unauthenticated!
+    rescue_from ActionController::RoutingError, with: :not_found!
+
+    def search
+        authorize! :search, @model
+        index
+    end
 
     def index
         # Rails.logger.debug params.inspect
@@ -47,11 +52,6 @@ class Api::V2::ApplicationController < ActionController::API
         result = @record.to_json(json_attrs)
         render json: result, status: 200
     end
-
-    # def current_user
-    #     # To comply with CanCanCan need for a current_user method in the controller
-    #     @current_user
-    # end
 
     private
     
@@ -95,10 +95,7 @@ class Api::V2::ApplicationController < ActionController::API
     # end
     
     
-    # def search
-    #     index
-    #     render :index
-    # end
+
     
 
     
@@ -145,7 +142,7 @@ class Api::V2::ApplicationController < ActionController::API
         # defined in the route, and must exist in the controller definition.
         # So, if it's not an activerecord, the find model makes no sense at all
         # thus must return 404
-        @model = (params[:path].split("/").first.classify.constantize rescue controller_path.classify.constantize rescue controller_name.classify.constantize rescue nil)
+        @model = (params[:ctrl].classify.constantize rescue params[:path].split("/").first.classify.constantize rescue controller_path.classify.constantize rescue controller_name.classify.constantize rescue nil)
         return not_found! if (!@model.new.is_a? ActiveRecord::Base rescue false)
     end
     
