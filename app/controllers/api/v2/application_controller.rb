@@ -14,6 +14,12 @@ class Api::V2::ApplicationController < ActionController::API
     rescue_from CanCan::AccessDenied, with: :unauthorized!
     rescue_from AuthenticateUser::AccessDenied, with: :unauthenticated!
     rescue_from ActionController::RoutingError, with: :not_found!
+    rescue_from ActiveModel::ForbiddenAttributesError, with: :fivehundred!
+    rescue_from ActiveRecord::RecordInvalid, with: :invalid!
+
+    def params
+        request.parameters
+    end
 
     # Allows for usig POST body to build ransack's q
     # POST :ctrl/search
@@ -54,6 +60,26 @@ class Api::V2::ApplicationController < ActionController::API
     def show
         result = @record.to_json(json_attrs)
         render json: result, status: 200
+    end
+
+    def create
+        @record =  @model.new(params[@model.model_name.singular])
+        @record.user_id = current_user.id if @model.column_names.include? "user_id"
+    
+        @record.save!
+    
+        render json: @record.to_json(json_attrs), status: 201
+    end
+    
+    def update
+        @record.update_attributes!(params[@model.model_name.singular])
+    
+        render json: @record.to_json(json_attrs), status: 200
+    end
+    
+    def destroy
+        return api_error(status: 500) unless @record.destroy
+        head :ok
     end
 
     private
@@ -102,25 +128,7 @@ class Api::V2::ApplicationController < ActionController::API
     
 
     
-    # def create
-    #     @record =  @model.new(request_params)
-    #     @record.user_id = current_user.id if @model.column_names.include? "user_id"
     
-    #     @record.save!
-    
-    #     render json: @record.to_json(json_attrs), status: 201
-    # end
-    
-    # def update
-    #     @record.update_attributes!(request_params)
-    
-    #     render json: @record.to_json(json_attrs), status: 200
-    # end
-    
-    # def destroy
-    #     return api_error(status: 500) unless @record.destroy
-    #     head :ok
-    # end
     
     # private
     
@@ -129,10 +137,6 @@ class Api::V2::ApplicationController < ActionController::API
         record_id ||= (params[:path].split("/").second.to_i rescue nil)
         @record = @model.column_names.include?("user_id") ? @model.where(id: (record_id.presence || @record_id.presence || params[:id]), user_id: current_user.id).first : @model.find((@record_id.presence || params[:id]))
         return not_found! if @record.blank?
-    end
-    
-    def request_params
-        (@params.presence || params).require(params[:path].split("/").first.singularize.to_sym).permit!
     end
     
     def json_attrs
@@ -175,8 +179,8 @@ class Api::V2::ApplicationController < ActionController::API
         api_error status: 422, errors: exception.record.errors
     end
     
-    def fivehundred!
-        api_error status: 500, errors: [I18n.t("api.errors.fivehundred", default: "Internal Server Error")]
+    def fivehundred! exception = StandardError.new
+        api_error status: 500, errors: [I18n.t("api.errors.fivehundred", default: "Internal Server Error"), exception.message]
     end
     
     def api_error(status: 500, errors: [])
