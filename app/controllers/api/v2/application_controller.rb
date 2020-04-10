@@ -149,7 +149,13 @@ class Api::V2::ApplicationController < ActionController::API
         # defined in the route, and must exist in the controller definition.
         # So, if it's not an activerecord, the find model makes no sense at all
         # thus must return 404
+        puts "CTRL: #{params[:ctrl]} - #{params[:ctrl].split("/").first.classify.constantize rescue "No CTRL"}"
+        puts "PATH: #{params[:path]} - #{params[:path].split("/").first.classify.constantize rescue "No PATH"}"
+        puts "CONTROLLER_PATH: #{controller_path}"
+        puts "CONTROLLER_NAME: #{controller_name}"
+        puts "Params Controler: #{params[:controller]}"
         @model = (params[:ctrl].classify.constantize rescue params[:path].split("/").first.classify.constantize rescue controller_path.classify.constantize rescue controller_name.classify.constantize rescue nil)
+        puts "MODEL: #{@model}"
         return not_found! if (!@model.new.is_a? ActiveRecord::Base rescue false)
     end
     

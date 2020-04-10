@@ -5,7 +5,6 @@ class Api::V2::InfoController < Api::V2::ApplicationController
   skip_load_and_authorize_resource
 
   # api :GET, '/api/v2/info/version', "Just prints the APPVERSION."
-  # api!
   def version
     render json: { version: SchemaBasedApi::VERSION }.to_json, status: 200
   end

@@ -18,11 +18,13 @@ Rails.application.routes.draw do
             post ":ctrl/search" => 'application#search'
 
             
-            # # # Catchall routes
-            # # get '*path', to: 'base#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }
+            # Catchall routes
+            # CRUD Index
+            get '*path', to: 'application#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }
             # # # # GET :controller/:custom_action
             # # # get '*path', to: 'base#custom_index', constraints: lambda { |request| request.path.split("/").second.to_i.zero? }
-            # # get '*path', to: 'base#show'#, constraints: lambda { |request| 
+            # CRUD Show
+            get '*path/:id', to: 'application#show'#, constraints: lambda { |request| 
             # # #     path = request.path.split("/")
             # # #     !path.second.to_i.zero? && path.third.blank? 
             # # # }
@@ -31,10 +33,12 @@ Rails.application.routes.draw do
             # # #     path = request.path.split("/")
             # # #     !path.second.to_i.zero? && !path.third.blank?
             # # # }
-            # # post '*path', to: 'base#create'#, constraints: lambda { |request| path.second.blank? }
+            # CRUD Create
+            post '*path', to: 'application#create'#, constraints: lambda { |request| path.second.blank? }
             # # # # POST :controller/:custom_action
             # # # post '*path', to: 'base#custom_create', constraints: lambda { |request| path.second.to_i.zero? }
-            # # put '*path', to: 'base#update'#, constraints: lambda { |request| 
+            # CRUD Update
+            put '*path/:id', to: 'application#update'#, constraints: lambda { |request| 
             # # #     path = request.path.split("/")
             # # #     !path.second.to_i.zero? && path.third.blank?
             # # # }
@@ -43,7 +47,8 @@ Rails.application.routes.draw do
             # # #     path = request.path.split("/")
             # # #     !path.second.to_i.zero? && !path.third.blank?
             # # # }
-            # # delete '*path', to: 'base#destroy'
+            # CRUD DElete
+            delete '*path/:id', to: 'application#destroy'
         end
     end
 end
