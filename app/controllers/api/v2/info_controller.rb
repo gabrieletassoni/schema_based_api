@@ -1,6 +1,8 @@
-class Api::V2::InfoController < Api::V2::BaseController
+class Api::V2::InfoController < Api::V2::ApplicationController
   # Info uses a different auth method: username and password
-  skip_before_action :authenticate_user, only: [:version], raise: false
+  skip_before_action :authenticate_request, only: [:version], raise: false
+  # Here we don't need CanCanCan, no ActiveRecord models here.
+  skip_load_and_authorize_resource
 
   # api :GET, '/api/v2/info/version', "Just prints the APPVERSION."
   # api!
@@ -8,20 +10,10 @@ class Api::V2::InfoController < Api::V2::BaseController
     render json: { version: SchemaBasedApi::VERSION }.to_json, status: 200
   end
 
-  # api :GET, '/api/v2/info/token'
-  # it returns the AUTH_TOKEN, email and id of the user which performed the authentication."
-  # api!
-  # def token
-  #   render json: {
-  #     token: @current_user.authentication_token,
-  #     email: @current_user.email
-  #   }.to_json, status: 200
-  # end
-
-  # api :GET, '/api/v2/info/available_roles'
+  # api :GET, '/api/v2/info/roles'
   # it returns the roles list
-  def available_roles
-    render json: ROLES.to_json, status: 200
+  def roles
+    render json: ::Role.all.to_json, status: 200
   end
 
   # GET '/api/v2/info/translations'
@@ -69,18 +61,4 @@ class Api::V2::InfoController < Api::V2::BaseController
     end
     render json: pivot.to_json, status: 200
   end
-  # private
-
-  # Method overridden because the first time I have to ask for the token
-  # def authenticate_user!
-  #   username, password = ActionController::HttpAuthentication::Basic.user_name_and_password(request)
-  #   if username
-  #     user = User.find_by(username: username)
-  #   end
-  #   if user && user.valid_password?(password)
-  #     @current_user = user
-  #   else
-  #     return unauthenticated!
-  #   end
-  # end
 end

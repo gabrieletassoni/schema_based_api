@@ -6,8 +6,17 @@ Rails.application.routes.draw do
         namespace :v2 do
             resources :users
 
+            namespace :info do
+                get :version
+                get :roles
+                get :translations
+                get :schema
+                get :dsl
+            end
+
             post "authenticate" => "authentication#authenticate"
             post ":ctrl/search" => 'application#search'
+
             
             # # # Catchall routes
             # # get '*path', to: 'base#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }

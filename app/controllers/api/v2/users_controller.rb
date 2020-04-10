@@ -1,4 +1,4 @@
-class Api::V2::UsersController < Api::V2::ApplicationController #Api::V2::BaseController
+class Api::V2::UsersController < Api::V2::ApplicationController
   before_action :check_demoting, only: [ :update, :destroy ]
   
   private
