@@ -15202,3 +15202,91 @@ Processing by Api::V2::ApplicationController#destroy as JSON
 Completed 200 OK in 93ms (ActiveRecord: 15.4ms | Allocations: 11868)
 
 
+Started POST "/api/v2/authenticate" for 127.0.0.1 at 2020-04-10 22:41:38 +0200
+  [1m[35m (2.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+Processing by Api::V2::AuthenticationController#authenticate as JSON
+  Parameters: {"auth"=>{"email"=>"admino@example.com", "password"=>"[FILTERED]"}, "authentication"=>{"auth"=>{"email"=>"admino@example.com", "password"=>"[FILTERED]"}}}
+Completed 404 Not Found in 209ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 24475)
+
+
+Started POST "/api/v2/authenticate" for 127.0.0.1 at 2020-04-10 22:41:48 +0200
+Processing by Api::V2::AuthenticationController#authenticate as JSON
+  Parameters: {"auth"=>{"email"=>"admino@example.com", "password"=>"[FILTERED]"}, "authentication"=>{"auth"=>{"email"=>"admino@example.com", "password"=>"[FILTERED]"}}}
+Completed 404 Not Found in 3ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 547)
+
+
+Started POST "/api/v2/authenticate" for 127.0.0.1 at 2020-04-10 22:42:05 +0200
+Processing by Api::V2::AuthenticationController#authenticate as JSON
+  Parameters: {"auth"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]"}, "authentication"=>{"auth"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]"}}}
+Completed 404 Not Found in 8ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 547)
+
+
+Started POST "/api/v2/authenticate" for 127.0.0.1 at 2020-04-10 22:43:48 +0200
+  [1m[35m (4.3ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+Processing by Api::V2::AuthenticationController#authenticate as JSON
+  Parameters: {"auth"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]"}, "authentication"=>{"auth"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin@example.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin@example.com"], ["LIMIT", 1]]
+Completed 200 OK in 949ms (Views: 1.1ms | ActiveRecord: 2.8ms | Allocations: 10300)
+
+
+Started POST "/api/v2/authenticate" for 127.0.0.1 at 2020-04-10 22:43:59 +0200
+Processing by Api::V2::AuthenticationController#authenticate as JSON
+  Parameters: {"auth"=>{"email"=>"admino@example.com", "password"=>"[FILTERED]"}, "authentication"=>{"auth"=>{"email"=>"admino@example.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admino@example.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admino@example.com"], ["LIMIT", 1]]
+Completed 200 OK in 562ms (Views: 0.2ms | ActiveRecord: 0.3ms | Allocations: 2284)
+
+
+Started GET "/api/v2/users" for 127.0.0.1 at 2020-04-10 22:44:06 +0200
+Processing by Api::V2::UsersController#index as JSON
+  Parameters: {"user"=>{}}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+Completed 403 Forbidden in 113ms (Views: 0.3ms | ActiveRecord: 0.6ms | Allocations: 26248)
+
+
+Started POST "/api/v2/users/search" for 127.0.0.1 at 2020-04-10 22:44:06 +0200
+Processing by Api::V2::ApplicationController#index as JSON
+  Parameters: {"q"=>{"id_eq"=>1}, "ctrl"=>"users", "application"=>{"q"=>{"id_eq"=>1}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+Completed 403 Forbidden in 6ms (Views: 0.3ms | ActiveRecord: 0.2ms | Allocations: 1633)
+
+
+Started POST "/api/v2/users" for 127.0.0.1 at 2020-04-10 22:44:06 +0200
+Processing by Api::V2::UsersController#create as JSON
+  Parameters: {"user"=>{"email"=>"1586551446877@example.com", "admin"=>false, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+Completed 403 Forbidden in 299ms (Views: 0.2ms | ActiveRecord: 0.2ms | Allocations: 1725)
+
+
+Started GET "/api/v2/users" for 127.0.0.1 at 2020-04-10 22:44:18 +0200
+Processing by Api::V2::UsersController#index as JSON
+  Parameters: {"user"=>{}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+Completed 403 Forbidden in 4ms (Views: 0.2ms | ActiveRecord: 0.2ms | Allocations: 1659)
+
+
+Started POST "/api/v2/authenticate" for 127.0.0.1 at 2020-04-10 22:44:33 +0200
+Processing by Api::V2::AuthenticationController#authenticate as JSON
+  Parameters: {"auth"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]"}, "authentication"=>{"auth"=>{"email"=>"admin@example.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin@example.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "admin@example.com"], ["LIMIT", 1]]
+Completed 200 OK in 556ms (Views: 0.3ms | ActiveRecord: 0.2ms | Allocations: 2284)
+
+
+Started GET "/api/v2/users" for 127.0.0.1 at 2020-04-10 22:44:38 +0200
+Processing by Api::V2::UsersController#index as JSON
+  Parameters: {"user"=>{}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT DISTINCT "users".* FROM "users"[0m
+Completed 200 OK in 40ms (Views: 0.2ms | ActiveRecord: 0.6ms | Allocations: 4019)
+
+
+Started GET "/api/v2/roles" for 127.0.0.1 at 2020-04-10 22:44:44 +0200
+Processing by Api::V2::ApplicationController#index as JSON
+  Parameters: {"path"=>"roles", "application"=>{}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mRole Load (0.3ms)[0m  [1m[34mSELECT DISTINCT "roles".* FROM "roles"[0m
+Completed 200 OK in 36ms (Views: 0.2ms | ActiveRecord: 1.9ms | Allocations: 7598)
+
+
