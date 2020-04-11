@@ -1,9 +1,8 @@
 class Api::V2::InfoController < Api::V2::ApplicationController
   # Info uses a different auth method: username and password
   skip_before_action :authenticate_request, only: [:version], raise: false
-  # Here we don't need CanCanCan, no ActiveRecord models here.
-  skip_load_and_authorize_resource
-
+  skip_before_action :extract_model
+  
   # api :GET, '/api/v2/info/version', "Just prints the APPVERSION."
   def version
     render json: { version: SchemaBasedApi::VERSION }.to_json, status: 200
