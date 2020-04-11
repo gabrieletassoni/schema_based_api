@@ -245,3 +245,5 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/osx,code,ruby,rails,linux,macos,windows,sublimetext
 
 .passwords
+*.log
+*.pid
