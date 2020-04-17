@@ -5,7 +5,7 @@ Doing this means also narrowing a bit the scope of the tools, taking decisions, 
 
 # Goal
 
-To have a comprehensive and meaningful API right out of the box by just creating migrations in your rails app.
+To have a comprehensive and meaningful API right out of the box by just creating migrations in your rails app or engine.
 
 # v2?
 
