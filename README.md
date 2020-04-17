@@ -1,5 +1,5 @@
 # SchemaBasedApi
-I've always been a sucker for effortless, no-fuss, conventions' based development, DRYness, and pragmatic programming, I've always thought that at this point of the technology evolution, we need not to configure too much to have our software run, and have the software adapt to data layers, from there build up automatically the APIs, visualizations etc. This is a first step to have a schema driven API, based on the data it has to serve, it also gives, thanks to meta programming, an insight on the actual schema, the translations available and the DSL which can change the way the data is presented, leading to a strong base for automatically build of UIs consuming the API (react, vue, angular based PWAs, maybe! ;-) ).
+I've always been a interested in effortless, no-fuss, conventions' based development, DRYness, and pragmatic programming, I've always thought that at this point of the technology evolution, we need not to configure too much to have our software run, and have the software adapt to data layers, from there build up automatically the APIs, visualizations etc. This is a first step to have a schema driven API, based on the data it has to serve, it also gives, thanks to meta programming, an insight on the actual schema, the translations available and the DSL which can change the way the data is presented, leading to a strong base for automatically build of UIs consuming the API (react, vue, angular based PWAs, maybe! ;-) ).
 
 Doing this means also narrowing a bit the scope of the tools, taking decisions, at least for the first iteratons of the project, so, this works well if the data is relational, so this is a convention taken as a prerequisite (postgres, mysql, mssql, etc.).
 
@@ -9,7 +9,7 @@ To have a comprehensive and meaningful API right out of the box by just creating
 
 # v2?
 
-Yes, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all started, many ideas are ported from there, but it was too coupled with thecore's rails_admin UI, de facto making it impossible to create an UI-less, API only application aout of the box, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
+Yes, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all started, many ideas are ported from there, but it was too coupled with thecore's rails_admin UI, making it impossible to create an UI-less, API only application, out of the box and directly from the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
 
 # Standards Used
 
