@@ -9,7 +9,7 @@ To have a comprehensive and meaningful API right out of the box by just creating
 
 # v2?
 
-Yes, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all started, many ideas are ported from there, but it was too coupled with thecore's rails_admin UI, de facto making it impossible to create an UI-less, API only application aout of the box, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
+Yes, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all started, many ideas are ported from there, but it was too coupled with thecore's rails_admin UI, making it impossible to create an UI-less, API only application, out of the box and directly from the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
 
 # Standards Used
 
