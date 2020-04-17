@@ -1,4 +1,4 @@
-# SchemaBasedApi
+# Schema Based Api
 I've always been interested in effortless, no-fuss, conventions' based development, DRYness, and pragmatic programming, I've always thought that at this point of the technology evolution, we need not to configure too much to have our software run, having the software adapt to data layers and from there building up APIs, visualizations, etc. in an automatic way. This is a first step to have a schema driven API or better model drive, based on the underlining database, the data it has to serve and some sane dafults, or conventions. This effort also gives, thanks to meta programming, an insight on the actual schema, via the info API, the translations available and the DSL which can change the way the data is presented, leading to a strong base for automatica built of UIs consuming the API (react, vue, angular based PWAs, maybe! ;-) ).
 
 Doing this means also narrowing a bit the scope of the tools, taking decisions, at least for the first implementations and versions of this engine, so, this works well if the data is relational, this is a prerequisite (postgres, mysql, mssql, etc.).
