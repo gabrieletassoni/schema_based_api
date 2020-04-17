@@ -53,7 +53,10 @@ This will setup a User model, Role model and the HABTM table between the two.
 Then, if you fire up your ```rails server``` you can already get a jwt and perform different operations.
 The default admin user created during the migration step has a randomly generated password you can find in a .passwords file in the root of your project, that's the initial password, in production you can replace that one, but for testing it proved handy to have it promptly available.
 
-If you want to manually test the API using [Insomnia](https://insomnia.rest/)
+## Testing
+
+If you want to manually test the API using [Insomnia](https://insomnia.rest/) I will publish in the repository the export for the chained requests I'm using.
+In the next few days, I'll publish also the rspec tests.
 
 ## References
 THanks to all these people for ideas:
