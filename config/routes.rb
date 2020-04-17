@@ -18,42 +18,16 @@ Rails.application.routes.draw do
             post ":ctrl/search" => 'application#index'
 
             # Catchall routes
-            # match '*path', to: "application#default", via: :all
             # # CRUD Show
-            get '*path/:id/:custom_action', to: 'application#show'#, constraints: lambda { |request| 
-            get '*path/:id', to: 'application#show'#, constraints: lambda { |request| 
+            get '*path/:id', to: 'application#show'
             # # CRUD Index
-            get '*path', to: 'application#index' #, constraints: lambda { |request| request.path.split("/").second.blank? }
+            get '*path', to: 'application#index'
             # # CRUD Create
-            post '*path', to: 'application#create'#, constraints: lambda { |request| path.second.blank? }
+            post '*path', to: 'application#create'
             # # CRUD Update
-            put '*path/:id/:custom_action', to: 'application#update'#, constraints: lambda { |request| 
-            put '*path/:id', to: 'application#update'#, constraints: lambda { |request| 
+            put '*path/:id', to: 'application#update'
             # # CRUD DElete
             delete '*path/:id', to: 'application#destroy'
-        
-            
-            # Catchall routes
-            # # # # GET :controller/:custom_action
-            # # # get '*path', to: 'base#custom_index', constraints: lambda { |request| request.path.split("/").second.to_i.zero? }
-           # # #     path = request.path.split("/")
-            # # #     !path.second.to_i.zero? && path.third.blank? 
-            # # # }
-            # # # # GET :controller/:id/:custom_action
-            # # # get '*path', to: 'base#custom_show', constraints: lambda { |request| 
-            # # #     path = request.path.split("/")
-            # # #     !path.second.to_i.zero? && !path.third.blank?
-            # # # }
-            # # # # POST :controller/:custom_action
-            # # # post '*path', to: 'base#custom_create', constraints: lambda { |request| path.second.to_i.zero? }
-            # # #     path = request.path.split("/")
-            # # #     !path.second.to_i.zero? && path.third.blank?
-            # # # }
-            # # # PUT :controller/:id/:custom_action
-            # # put '*path', to: 'base#custom_update'#, constraints: lambda { |request| 
-            # # #     path = request.path.split("/")
-            # # #     !path.second.to_i.zero? && !path.third.blank?
-            # # # }
         end
     end
 end

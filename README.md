@@ -55,8 +55,10 @@ The default admin user created during the migration step has a randomly generate
 
 If you want to manually test the API using [Insomnia](https://insomnia.rest/)
 
-## Contributing
-Contribution directions go here.
+## References
+THanks to all these people for ideas:
+
+* [Daniel](https://medium.com/@tdaniel/passing-refreshed-jwts-from-rails-api-using-headers-859f1cfe88e9) For a smart way to manage token expiration.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

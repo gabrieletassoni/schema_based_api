@@ -151,8 +151,11 @@ class Api::V2::ApplicationController < ActionController::API
     
     def authenticate_request
         @current_user = AuthorizeApiRequest.call(request.headers).result
-        unauthenticated! unless @current_user
+        return unauthenticated! unless @current_user
         current_user = @current_user
+        # Now every time the user fires off a successful GET request, 
+        # a new token is generated and passed to them, and the clock resets.
+        response.headers['Token'] = JsonWebToken.encode(user_id: current_user.id)
     end
     
     def find_record
