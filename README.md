@@ -13,15 +13,11 @@ Yes, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all st
 
 # Standards Used
 
-* [JWT](https://medium.com/@billy.sf.cheng/a-rails-6-application-part-1-api-1ee5ccf7ed01) for authentication.
+* [JWT](https://github.com/jwt/ruby-jwt) for authentication.
 * [CanCanCan](https://github.com/CanCanCommunity/cancancan) for authorization.
 * [Active Hash Relation](https://github.com/kollegorna/active_hash_relation) for DSL.
 * [Ransack](https://github.com/activerecord-hackery/ransack) query engine for complex searches going beyond CRUD's listing scope.
 * Catch all routing rule to add basic crud operations to any AR model in the app.
-
-# TODO
-
-* Integrate Authorization within ```GET info/schema``` requests in order to send to the client just the models for which a user has authorization.
 
 ## Usage
 How to use my plugin.
@@ -61,6 +57,7 @@ In the next few days, I'll publish also the rspec tests.
 ## References
 THanks to all these people for ideas:
 
+* [Billy Cheng](https://medium.com/@billy.sf.cheng/a-rails-6-application-part-1-api-1ee5ccf7ed01) For a way to have a nice and clean implementation of the JWT on top of Devise.
 * [Daniel](https://medium.com/@tdaniel/passing-refreshed-jwts-from-rails-api-using-headers-859f1cfe88e9) For a smart way to manage token expiration.
 
 ## License
