@@ -9,7 +9,8 @@ To have a comprehensive and meaningful API right out of the box by just creating
 
 # v2?
 
-Yes, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all started, many ideas are ported from there, but it was too coupled with thecore's rails_admin UI, making it impossible to create an UI-less, API only application, out of the box and directly from the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
+Yes, this is the second version of such an effort, the [v1](https://github.com/gabrieletassoni/thecore_api) was were it all started, many ideas are ported from there, such as the generation of the automatic model based crud actions, as well as custom actions definitions and all the things that make also this gem useful for my daily job were already in place, but it was too coupled with [thecore](https://github.com/gabrieletassoni/thecore)'s [rails_admin](https://github.com/sferik/rails_admin) UI, making it impossible to create a complete UI-less, API only application, out of the box and directly based of the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
+So it all began again, making a better thecore_api gem into this schema_based_api gem, more polished, more functional and self contained.
 
 # Standards Used
 
