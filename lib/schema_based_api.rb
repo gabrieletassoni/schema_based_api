@@ -7,6 +7,7 @@ require 'ransack'
 require 'json_web_token'
 require "kaminari"
 require "multi_json"
+require "simple_command"
 
 require 'concerns/api_exception_management'
 
