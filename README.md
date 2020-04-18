@@ -50,9 +50,143 @@ This will setup a User model, Role model and the HABTM table between the two.
 Then, if you fire up your ```rails server``` you can already get a jwt and perform different operations.
 The default admin user created during the migration step has a randomly generated password you can find in a .passwords file in the root of your project, that's the initial password, in production you can replace that one, but for testing it proved handy to have it promptly available.
 
+## Consuming the API
+
+The first thing that must be done by the client is to get a Token using the credentials:
+
+```bash
+POST http://localhost:3000/api/v2/authenticate
+```
+
+with a POST body like the one below:
+
+```json
+{
+	"auth": {
+		"email": "<REPLACE>",
+		"password": "<REPLACE>"
+	}
+}
+```
+
+This action will return in the header a *Token* you can use for the following requests.
+Bear in mind that the *Token* will expire within 15 minutes and that at each succesful request a new token is returned using the same *Token* header, so, at each interaction between client server, just making an authenticated and succesful request, will give you back a way of continuing to make authenticated requests without the extra overhead of an authentication for each one and without having to keep long expiry times for the *Token*.
+
+## Info API
+
+The info API **api/v2/info/** can be used to retrieve general information about the REST API:
+
+### Version
+
+By issuing a GET on this api, you will get a response containing the version of the schema_based_api. 
+This is a request which doesn't require authentication, it could be used as a checkpoint for consuming the resources exposed by this engine.
+
+```bash
+GET http://localhost:3000/api/v2/info/version
+```
+
+Would produce a response body like this one:
+
+```json
+{
+  "version": "2.1.14"
+}
+```
+
+### Roles
+
+**Authenticated Request** by issuing a GET request to */api/v2/info/roles*:
+
+```bash
+GET http://localhost:3000/api/v2/info/roles
+```
+
+Something like this can be retrieved:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "role-1586521657646",
+    "created_at": "2020-04-10T12:27:38.061Z",
+    "updated_at": "2020-04-10T12:27:38.061Z",
+    "lock_version": 0
+  },
+  {
+    "id": 2,
+    "name": "role-1586522353509",
+    "created_at": "2020-04-10T12:39:14.276Z",
+    "updated_at": "2020-04-10T12:39:14.276Z",
+    "lock_version": 0
+  }
+]
+```
+
+### Schema
+
+**Authenticated Request** This action will send back the *authorized* models accessible by the current user at least for [:read capability](https://github.com/ryanb/cancan/wiki/checking-abilities). The list will also show the field types of the model and the associations.
+
+By issuing this GET request:
+
+```bash
+GET http://localhost:3000/api/v2/info/roles
+```
+
+You will get something like:
+
+```json
+{
+  "users": {
+    "id": "integer",
+    "email": "string",
+    "encrypted_password": "string",
+    "admin": "boolean",
+    "lock_version": "integer",
+    "associations": {
+      "has_many": [
+        "role_users",
+        "roles"
+      ],
+      "belongs_to": []
+    },
+    "methods": null
+  },
+  "role_users": {
+    "id": "integer",
+    "created_at": "datetime",
+    "updated_at": "datetime",
+    "associations": {
+      "has_many": [],
+      "belongs_to": [
+        "user",
+        "role"
+      ]
+    },
+    "methods": null
+  },
+  "roles": {
+    "id": "integer",
+    "name": "string",
+    "created_at": "datetime",
+    "updated_at": "datetime",
+    "lock_version": "integer",
+    "associations": {
+      "has_many": [
+        "role_users",
+        "users"
+      ],
+      "belongs_to": []
+    },
+    "methods": null
+  }
+}
+```
+
+The *methods* key will list the **custom actions** that can be used in addition to normal CRUD operations, these can be bulk actions and anything that can serve a purpose, usually to simplify the interaction between client and server (i.e. getting in one request the result of a complex computations which usually would be sorted out using more requests). Later on this topic.
+
 ## Testing
 
-If you want to manually test the API using [Insomnia](https://insomnia.rest/) I will publish in the repository the export for the chained requests I'm using.
+If you want to manually test the API using [Insomnia](https://insomnia.rest/) you can find the chained request in Insomnia v4 json format inside the **test/insomnia** folder.
 In the next few days, I'll publish also the rspec tests.
 
 ## References

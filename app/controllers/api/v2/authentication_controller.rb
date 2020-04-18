@@ -9,5 +9,4 @@ class Api::V2::AuthenticationController < ActionController::API
             head :ok
         end
     end
-    
 end
