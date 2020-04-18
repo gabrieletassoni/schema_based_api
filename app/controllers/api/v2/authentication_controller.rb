@@ -6,9 +6,7 @@ class Api::V2::AuthenticationController < ActionController::API
         
         if command.success?
             response.headers['Token'] = command.result
-            render json: { message: ["Login successful!"] }
-        else
-            render json: { error: command.errors }, status: :unauthorized
+            head :ok
         end
     end
     

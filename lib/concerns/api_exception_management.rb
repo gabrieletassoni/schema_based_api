@@ -10,34 +10,25 @@ module ApiExceptionManagement
         rescue_from ActiveRecord::RecordInvalid, with: :invalid!
         rescue_from ActiveRecord::RecordNotFound, with: :not_found!
         
-        def unauthenticated! exception = StandardError.new
+        def unauthenticated! exception = AuthenticateUser::AccessDenied.new
             response.headers['WWW-Authenticate'] = "Token realm=Application"
-            api_error status: 401, errors: [I18n.t("api.errors.bad_credentials", default: "Bad Credentials"), exception.message]
+            return api_error status: 401, errors: exception.message
         end
         
-        def unauthorized! exception = StandardError.new
-            api_error status: 403, errors: [I18n.t("api.errors.unauthorized", default: "Unauthorized"), exception.message]
-            return
+        def unauthorized! exception = CanCan::AccessDenied.new
+            return api_error status: 403, errors: exception.message
         end
         
         def not_found! exception = StandardError.new
-            return api_error(status: 404, errors: [I18n.t("api.errors.not_found", default: "Not Found"), exception.message])
-        end
-        
-        def name_error!
-            api_error(status: 501, errors: [I18n.t("api.errors.name_error", default: "Name Error")])
-        end
-        
-        def no_method_error!
-            api_error(status: 501, errors: [I18n.t("api.errors.no_method_error", default: "No Method Error")])
+            return api_error status: 404, errors: exception.message
         end
         
         def invalid! exception = StandardError.new
-            api_error status: 422, errors: exception.record.errors
+            return api_error status: 422, errors: exception.record.errors 
         end
         
         def fivehundred! exception = StandardError.new
-            api_error status: 500, errors: [I18n.t("api.errors.fivehundred", default: "Internal Server Error"), exception.message]
+            return api_error status: 500, errors: exception.message
         end
         
         def api_error(status: 500, errors: [])

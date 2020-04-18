@@ -17,82 +17,15 @@ class Api::V2::ApplicationController < ActionController::API
         request.parameters
     end
     
-    # TODO: Remove when not needed
-    # def dispatcher
-    #     # This method is only valid for ActiveRecords
-    #     # For any other model-less controller, the actions must be 
-    #     # defined in the route, and must exist in the controller definition.
-    #     # So, if it's not an activerecord, the find model makes no sense at all.
-    #     path = params[:path].split("/")
-    #     # Default convention for the requests: :controller/:id/:custom_action
-    #     # or :controller/:custom_action.
-    #     # With the ID as an Integer
-    #     # TODO: Extend to understand nested resources maybe testing if the 
-    #     # third param is a AR model, that can have an ID, etc..
-    #     controller = path.first
-    #     id = path.second
-    #     custom_action = path.third
-    #     # managing 
-    #     if request.get?
-    #         if id.blank?
-    #             # @page = params[:page]
-    #             # @per = params[:per]
-    #             # @pages_info = params[:pages_info]
-    #             # @count = params[:count]
-    #             # @query = params[:q]
-    #             index
-    #         elsif id.to_i.zero?
-    #             # String, so it's a custom action I must find in the @model (as a singleton method)
-    #             # GET :controller/:custom_action
-    #             return not_found! unless @model.respond_to?(id)
-    #             return render json: MultiJson.dump(@model.send(id, params)), status: 200
-    #         elsif !id.to_i.zero? && custom_action.blank?
-    #             # Integer, so it's an ID, I must show it
-    #             @record_id =  id.to_i
-    #             find_record
-    #             show
-    #         elsif !id.to_i.zero? && !custom_action.blank?
-    #             # GET :controller/:id/:custom_action
-    #             return not_found! unless @model.respond_to?(custom_action)
-    #             return render json: MultiJson.dump(@model.send(custom_action, id.to_i, params)), status: 200
-    #         end
-    #     elsif request.post?
-    #         if id.blank?
-    #             # @params = params
-    #             create
-    #         elsif id.to_i.zero?
-    #             # POST :controller/:custom_action
-    #             return not_found! unless @model.respond_to?(id)
-    #             return render json: MultiJson.dump(@model.send(id, params)), status: 200
-    #         end
-    #     elsif request.put?
-    #         if !id.to_i.zero? && custom_action.blank?
-    #             # @params = params
-    #             # Rails.logger.debug "IL SECONDO è ID in PUT? #{path.second.inspect}"
-    #             # find_record path.second.to_i
-    #             @record_id =  id.to_i
-    #             find_record
-    #             update
-    #         elsif !id.to_i.zero? && !custom_action.blank?
-    #             # PUT :controller/:id/:custom_action
-    #             # puts "ANOTHER SECOND AND THIRD"
-    #             return not_found! unless @model.respond_to?(custom_action)
-    #             return render json: MultiJson.dump(@model.send(custom_action, id.to_i, params)), status: 200
-    #         end
-    #     elsif request.delete?
-    #         # Rails.logger.debug "IL SECONDO è ID in delete? #{path.second.inspect}"
-    #         # find_record path.second.to_i
-    #         @record_id =  id.to_i
-    #         find_record
-    #         destroy
-    #     end
-    # end
-    
     # GET :controller/
     def index
         authorize! :index, @model
-        # Rails.logger.debug params.inspect
-        # find the records
+
+        # Custom Action
+        status, result = check_for_custom_action
+        return render json: result, status: 200 if status == true
+
+        # Normal Index Action with Ransack querying
         @q = (@model.column_names.include?("user_id") ? @model.where(user_id: current_user.id) : @model).ransack(@query.presence|| params[:q])
         @records_all = @q.result(distinct: true)
         page = (@page.presence || params[:page])
@@ -119,7 +52,13 @@ class Api::V2::ApplicationController < ActionController::API
     end
     
     def show
-        authorize! :show, @record
+        authorize! :show, @record_id
+
+        # Custom Show Action
+        status, result = check_for_custom_action
+        return render json: result, status: 200 if status == true
+
+        # Normal Show
         result = @record.to_json(json_attrs)
         render json: result, status: 200
     end
@@ -127,32 +66,60 @@ class Api::V2::ApplicationController < ActionController::API
     def create
         @record = @model.new(@body)
         authorize! :create, @record
+
+        # Custom Action
+        status, result = check_for_custom_action
+        return render json: result, status: 200 if status == true
+
+        # Normal Create Action
         @record.user_id = current_user.id if @model.column_names.include? "user_id"
-        
         @record.save!
-        
         render json: @record.to_json(json_attrs), status: 201
     end
     
     def update
         authorize! :update, @record
+
+        # Custom Action
+        status, result = check_for_custom_action
+        return render json: result, status: 200 if status == true
+
+        # Normal Update Action
         @record.update_attributes!(@body)
-        
         render json: @record.to_json(json_attrs), status: 200
     end
     
     def destroy
         authorize! :destroy, @record
+
+        # Custom Action
+        status, result = check_for_custom_action
+        return render json: result, status: 200 if status == true
+
+        # Normal Destroy Action
         return api_error(status: 500) unless @record.destroy
         head :ok
     end
     
     private
+
+    def check_for_custom_action
+        ## CUSTOM ACTION
+        # [GET|PUT|POST|DELETE] :controller?do=:custom_action
+        # or
+        # [GET|PUT|POST|DELETE] :controller/:id?do=:custom_action
+        unless params[:do].blank?
+            raise NoMethodError unless @model.respond_to?(params[:do])
+            return true, MultiJson.dump(params[:id].blank? ? @model.send(params[:do], params) : @model.send(params[:do], params[:id].to_i, params))
+        end
+        # if it's here there is no custom action in the request querystring
+        return false
+    end
     
     def authenticate_request
         @current_user = AuthorizeApiRequest.call(request.headers).result
         return unauthenticated! unless @current_user
-        current_user = @current_user
+        params[:current_user] = current_user = @current_user
         # Now every time the user fires off a successful GET request, 
         # a new token is generated and passed to them, and the clock resets.
         response.headers['Token'] = JsonWebToken.encode(user_id: current_user.id)

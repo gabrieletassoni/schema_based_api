@@ -1,7 +1,7 @@
 class AuthenticateUser
     class AccessDenied < StandardError
         def message
-            "Cannot authenticate user."
+            "AuthenticationError"
         end
     end
     prepend SimpleCommand
