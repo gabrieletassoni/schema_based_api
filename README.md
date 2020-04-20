@@ -126,7 +126,7 @@ Something like this can be retrieved:
 
 #### Schema
 
-**Authenticated Request** This action will send back the *authorized* models accessible by the current user at least for [:read capability](https://github.com/ryanb/cancan/wiki/checking-abilities). The list will also show the field types of the model and the associations.
+**Authenticated Request** This action will send back the *authorized* models accessible by the current user at least for the [:read ability](https://github.com/ryanb/cancan/wiki/checking-abilities). The list will also show the field types of the model and the associations.
 
 By issuing this GET request:
 
