@@ -191,6 +191,11 @@ The *methods* key will list the **custom actions** that can be used in addition 
 If you want to manually test the API using [Insomnia](https://insomnia.rest/) you can find the chained request in Insomnia v4 json format inside the **test/insomnia** folder.
 In the next few days, I'll publish also the rspec tests.
 
+## TODO
+
+* Integrate a settings gem
+* Add DSL for users and roles
+
 ## References
 THanks to all these people for ideas:
 
