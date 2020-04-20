@@ -16,7 +16,6 @@ So it all began again, making a better thecore_api gem into this schema_based_ap
 
 * [JWT](https://github.com/jwt/ruby-jwt) for authentication.
 * [CanCanCan](https://github.com/CanCanCommunity/cancancan) for authorization.
-* [Active Hash Relation](https://github.com/kollegorna/active_hash_relation) for DSL.
 * [Ransack](https://github.com/activerecord-hackery/ransack) query engine for complex searches going beyond CRUD's listing scope.
 * Catch all routing rule to add basic crud operations to any AR model in the app.
 
