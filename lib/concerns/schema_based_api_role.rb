@@ -1,11 +1,7 @@
-module SchemaBasedApiUser
+module SchemaBasedApiRole
     extend ActiveSupport::Concern
     
     included do
-        def authenticate password
-            self&.valid_password?(password) ? self : nil
-        end
-
         ## DSL (AKA what to show in the returned JSON)
         # Use @@json_attrs to drive json rendering for 
         # API model responses (index, show and update ones).
@@ -23,7 +19,7 @@ module SchemaBasedApiUser
         cattr_accessor :json_attrs
         @@json_attrs = {
             except: [:lock_version],
-            include: [:roles]
+            include: [:users]
         }
 
         ## CUSTOM ACTIONS
