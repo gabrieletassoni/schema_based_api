@@ -1,6 +1,6 @@
 class Api::V2::ApplicationController < ActionController::API
     # For the DSL part
-    include ActiveHashRelation
+    # include ActiveHashRelation
     # Actions will be authorized directly in the action
     include CanCan::ControllerAdditions
     include ::ApiExceptionManagement

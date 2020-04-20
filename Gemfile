@@ -18,7 +18,7 @@ gem 'thecore_auth_commons', require: 'thecore_auth_commons', path: '../thecore_a
 gem 'ransack'
 gem 'jwt'
 gem 'simple_command'
-gem 'active_hash_relation'
+# gem 'active_hash_relation'
 gem 'rack-cors'
 gem 'kaminari'
 gem 'multi_json'

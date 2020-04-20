@@ -18,7 +18,11 @@ module SchemaBasedApiRole
         #       accepts the [:only, :except, :methods, :include] keys.
         cattr_accessor :json_attrs
         @@json_attrs = SchemaBasedApi.smart_merge((json_attrs || {}), {
-            except: [:lock_version],
+            except: [
+                :lock_version,
+                :created_at,
+                :updated_at
+            ],
             include: [:users]
         })
 
