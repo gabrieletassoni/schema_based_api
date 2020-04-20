@@ -21,10 +21,10 @@ module SchemaBasedApiUser
         # - include: include associated models, it's a list [] of hashes {} which also 
         #       accepts the [:only, :except, :methods, :include] keys.
         cattr_accessor :json_attrs
-        @@json_attrs = {
+        @@json_attrs = SchemaBasedApi.smart_merge((json_attrs || {}), {
             except: [:lock_version],
             include: [:roles]
-        }
+        })
 
         ## CUSTOM ACTIONS
         # Here you can add custom actions to be called from the API

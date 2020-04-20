@@ -39,5 +39,9 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'multi_json', '~> 1.14'
 
+  # Intelligent Merging (recursive and recognizes types)
+  # https://github.com/danielsdeleo/deep_merge
+  s.add_dependency "deep_merge", '~> 1.2'
+
   spec.add_development_dependency "sqlite3"
 end
