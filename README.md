@@ -52,6 +52,8 @@ The default admin user created during the migration step has a randomly generate
 
 ## Consuming the API
 
+### Getting the Token
+
 The first thing that must be done by the client is to get a Token using the credentials:
 
 ```bash
@@ -72,11 +74,11 @@ with a POST body like the one below:
 This action will return in the header a *Token* you can use for the following requests.
 Bear in mind that the *Token* will expire within 15 minutes and that at each succesful request a new token is returned using the same *Token* header, so, at each interaction between client server, just making an authenticated and succesful request, will give you back a way of continuing to make authenticated requests without the extra overhead of an authentication for each one and without having to keep long expiry times for the *Token*.
 
-## Info API
+### Info API
 
 The info API **api/v2/info/** can be used to retrieve general information about the REST API:
 
-### Version
+#### Version
 
 By issuing a GET on this api, you will get a response containing the version of the schema_based_api. 
 This is a request which doesn't require authentication, it could be used as a checkpoint for consuming the resources exposed by this engine.
@@ -93,7 +95,7 @@ Would produce a response body like this one:
 }
 ```
 
-### Roles
+#### Roles
 
 **Authenticated Request** by issuing a GET request to */api/v2/info/roles*:
 
@@ -122,7 +124,7 @@ Something like this can be retrieved:
 ]
 ```
 
-### Schema
+#### Schema
 
 **Authenticated Request** This action will send back the *authorized* models accessible by the current user at least for [:read capability](https://github.com/ryanb/cancan/wiki/checking-abilities). The list will also show the field types of the model and the associations.
 
