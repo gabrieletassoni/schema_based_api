@@ -1,21 +1,15 @@
 class Api::V2::ApplicationController < ActionController::API
+    # For the DSL part
     include ActiveHashRelation
+    # Actions will be authorized directly in the action
+    include CanCan::ControllerAdditions
+    include ::ApiExceptionManagement
+
+    attr_accessor :current_user
     
     before_action :authenticate_request
     before_action :extract_model
     before_action :find_record, only: [ :show, :destroy, :update ]
-    
-    attr_accessor :current_user
-    
-    # Actions will be authorized directly in the action
-    include CanCan::ControllerAdditions
-
-    include ::ApiExceptionManagement
-    
-    # Nullifying strong params for API
-    def params
-        request.parameters
-    end
     
     # GET :controller/
     def index
@@ -109,8 +103,11 @@ class Api::V2::ApplicationController < ActionController::API
         # or
         # [GET|PUT|POST|DELETE] :controller/:id?do=:custom_action
         unless params[:do].blank?
-            raise NoMethodError unless @model.respond_to?(params[:do])
-            return true, MultiJson.dump(params[:id].blank? ? @model.send(params[:do], params) : @model.send(params[:do], params[:id].to_i, params))
+            # Poor man's solution to avoid the possibility to 
+            # call an unwanted method in the AR Model.
+            resource = "custom_action_#{params[:do]}"
+            raise NoMethodError unless @model.respond_to?(resource)
+            return true, MultiJson.dump(params[:id].blank? ? @model.send(resource, params) : @model.send(resource, params[:id].to_i, params))
         end
         # if it's here there is no custom action in the request querystring
         return false
@@ -119,7 +116,8 @@ class Api::V2::ApplicationController < ActionController::API
     def authenticate_request
         @current_user = AuthorizeApiRequest.call(request.headers).result
         return unauthenticated! unless @current_user
-        params[:current_user] = current_user = @current_user
+        current_user = @current_user
+        params[:current_user_id] = @current_user.id
         # Now every time the user fires off a successful GET request, 
         # a new token is generated and passed to them, and the clock resets.
         response.headers['Token'] = JsonWebToken.encode(user_id: current_user.id)
@@ -147,5 +145,10 @@ class Api::V2::ApplicationController < ActionController::API
         @body = params[@model.model_name.singular].presence || params[@model.model_name.route_key]
         # Only ActiveRecords can have this model caputed 
         return not_found! if (!@model.new.is_a? ActiveRecord::Base rescue false)
+    end
+
+    # Nullifying strong params for API
+    def params
+        request.parameters
     end
 end
