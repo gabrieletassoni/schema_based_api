@@ -43,5 +43,5 @@ Gem::Specification.new do |spec|
   # https://github.com/danielsdeleo/deep_merge
   spec.add_dependency "deep_merge", '~> 1.2'
 
-  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "sqlite3", "~> 1.4"
 end
