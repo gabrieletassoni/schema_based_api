@@ -1,6 +1,6 @@
 class Api::V2::ApplicationController < ActionController::API
-    # For the DSL part
-    # include ActiveHashRelation
+    # Detect Locale from Accept-Language headers
+    include HttpAcceptLanguage::AutoLocale
     # Actions will be authorized directly in the action
     include CanCan::ControllerAdditions
     include ::ApiExceptionManagement
