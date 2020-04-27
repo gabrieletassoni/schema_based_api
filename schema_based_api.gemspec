@@ -25,8 +25,6 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  spec.add_dependency "rails", "~> 6.0.2", ">= 6.0.2.1"
-
   spec.add_dependency "thecore_auth_commons", "~> 2.1"
   spec.add_dependency "jwt", "~> 2.2"
 
@@ -42,6 +40,4 @@ Gem::Specification.new do |spec|
   # Intelligent Merging (recursive and recognizes types)
   # https://github.com/danielsdeleo/deep_merge
   spec.add_dependency "deep_merge", '~> 1.2'
-
-  spec.add_development_dependency "sqlite3", "~> 1.4"
 end
