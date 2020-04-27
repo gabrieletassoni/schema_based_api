@@ -1,3 +1,3 @@
 module SchemaBasedApi
-  VERSION = '2.1.19'
+  VERSION = '2.2.0'
 end
