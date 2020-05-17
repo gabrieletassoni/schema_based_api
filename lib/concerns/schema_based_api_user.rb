@@ -2,9 +2,6 @@ module SchemaBasedApiUser
     extend ActiveSupport::Concern
     
     included do
-        def authenticate password
-            self&.valid_password?(password) ? self : nil
-        end
 
         ## DSL (AKA what to show in the returned JSON)
         # Use @@json_attrs to drive json rendering for 
