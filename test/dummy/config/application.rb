@@ -3,7 +3,7 @@ require_relative 'boot'
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
-require "schema_based_api"
+require "model_driven_api"
 
 module Dummy
   class Application < Rails::Application

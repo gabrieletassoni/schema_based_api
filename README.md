@@ -10,7 +10,7 @@ To have a comprehensive and meaningful API right out of the box by just creating
 # v2?
 
 Yes, this is the second version of such an effort and you can note it from the api calls, which are all under the ```/api/v2``` namespace the [/api/v1](https://github.com/gabrieletassoni/thecore_api) one, was were it all started, many ideas are ported from there, such as the generation of the automatic model based crud actions, as well as custom actions definitions and all the things that make also this gem useful for my daily job were already in place, but it was too coupled with [thecore](https://github.com/gabrieletassoni/thecore)'s [rails_admin](https://github.com/sferik/rails_admin) UI, making it impossible to create a complete UI-less, API only application, out of the box and directly based of the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
-So it all began again, making a better thecore_api gem into this schema_based_api gem, more polished, more functional and self contained.
+So it all began again, making a better thecore_api gem into this model_driven_api gem, more polished, more functional and self contained.
 
 # Standards Used
 
@@ -26,7 +26,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'schema_based_api'
+gem 'model_driven_api'
 ```
 
 And then execute:
@@ -36,7 +36,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install schema_based_api
+$ gem install model_driven_api
 ```
 
 Then run the migrations:
@@ -79,7 +79,7 @@ The info API **api/v2/info/** can be used to retrieve general information about 
 
 #### Version
 
-By issuing a GET on this api, you will get a response containing the version of the schema_based_api. 
+By issuing a GET on this api, you will get a response containing the version of the model_driven_api. 
 This is a request which doesn't require authentication, it could be used as a checkpoint for consuming the resources exposed by this engine.
 
 ```bash

@@ -10,9 +10,9 @@ require 'concerns/api_exception_management'
 
 require 'deep_merge/rails_compat'
 
-require "schema_based_api/engine"
+require "model_driven_api/engine"
 
-module SchemaBasedApi
+module ModelDrivenApi
   def self.smart_merge src, dest
       src.deeper_merge! dest, {
           extend_existing_arrays: true, 

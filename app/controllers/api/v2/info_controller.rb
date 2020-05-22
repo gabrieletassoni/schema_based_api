@@ -5,7 +5,7 @@ class Api::V2::InfoController < Api::V2::ApplicationController
   
   # api :GET, '/api/v2/info/version', "Just prints the APPVERSION."
   def version
-    render json: { version: SchemaBasedApi::VERSION }.to_json, status: 200
+    render json: { version: ModelDrivenApi::VERSION }.to_json, status: 200
   end
 
   # api :GET, '/api/v2/info/roles'

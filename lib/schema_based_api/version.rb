@@ -1,3 +1,3 @@
-module SchemaBasedApi
+module ModelDrivenApi
   VERSION = '2.2.3'
 end
