@@ -1,4 +1,4 @@
-module SchemaBasedApiUser
+module ModelDrivenApiUser
     extend ActiveSupport::Concern
     
     included do
@@ -18,7 +18,7 @@ module SchemaBasedApiUser
         # - include: include associated models, it's a list [] of hashes {} which also 
         #       accepts the [:only, :except, :methods, :include] keys.
         cattr_accessor :json_attrs
-        @@json_attrs = SchemaBasedApi.smart_merge((json_attrs || {}), {
+        @@json_attrs = ModelDrivenApi.smart_merge((json_attrs || {}), {
             except: [
                 :lock_version,
                 :created_at,

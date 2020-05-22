@@ -1,4 +1,4 @@
-module SchemaBasedApi
+module ModelDrivenApi
   class Engine < ::Rails::Engine
     # appending migrations to the main app's ones
     initializer :append_migrations do |app|

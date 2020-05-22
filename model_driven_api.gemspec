@@ -1,15 +1,15 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "schema_based_api/version"
+require "model_driven_api/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
-  spec.name        = "schema_based_api"
-  spec.version     = SchemaBasedApi::VERSION
+  spec.name        = "model_driven_api"
+  spec.version     = ModelDrivenApi::VERSION
   spec.authors     = ["Gabriele Tassoni"]
   spec.email       = ["gabriele.tassoni@gmail.com"]
-  spec.homepage    = "https://github.com/gabrieletassoni/schema_based_api"
+  spec.homepage    = "https://github.com/gabrieletassoni/model_driven_api"
   spec.summary     = "Convention based RoR engine which uses DB schema introspection to create REST APIs."
   spec.description = "Ruby on Rails REST APIs built by convention using the DB schema as the foundation."
   spec.license     = "MIT"
