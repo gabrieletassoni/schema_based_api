@@ -23,7 +23,9 @@ module ModelDrivenApiRole
                 :created_at,
                 :updated_at
             ],
-            include: [:users]
+            include: [users: {
+                only: [:id]
+            }]
         })
 
         ## CUSTOM ACTIONS
