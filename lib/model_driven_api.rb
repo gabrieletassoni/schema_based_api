@@ -1,6 +1,7 @@
 require 'thecore_backend_commons'
 require 'rack/cors'
 require 'ransack'
+require 'jwt'
 require 'json_web_token'
 require "kaminari"
 require "multi_json"
