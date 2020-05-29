@@ -12,6 +12,12 @@ To have a comprehensive and meaningful API right out of the box by just creating
 Yes, this is the second version of such an effort and you can note it from the api calls, which are all under the ```/api/v2``` namespace the [/api/v1](https://github.com/gabrieletassoni/thecore_api) one, was were it all started, many ideas are ported from there, such as the generation of the automatic model based crud actions, as well as custom actions definitions and all the things that make also this gem useful for my daily job were already in place, but it was too coupled with [thecore](https://github.com/gabrieletassoni/thecore)'s [rails_admin](https://github.com/sferik/rails_admin) UI, making it impossible to create a complete UI-less, API only application, out of the box and directly based of the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
 So it all began again, making a better thecore_api gem into this model_driven_api gem, more polished, more functional and self contained.
 
+## What has changed
+
+* Replace v1 with **v2** in the url
+* **Custom actions** defined in model's concerns now are triggered by a do querystring, for example: ```/api/v2/:model?do=custom_action``` or ```/api/v2/:model/:id?do=custom_action```
+* Searches using Ransack can be done either by GET or POST, but POST is preferred.
+
 # Standards Used
 
 * [JWT](https://github.com/jwt/ruby-jwt) for authentication.
@@ -71,7 +77,17 @@ with a POST body like the one below:
 ```
 
 This action will return in the header a *Token* you can use for the following requests.
-Bear in mind that the *Token* will expire within 15 minutes and that at each succesful request a new token is returned using the same *Token* header, so, at each interaction between client server, just making an authenticated and succesful request, will give you back a way of continuing to make authenticated requests without the extra overhead of an authentication for each one and without having to keep long expiry times for the *Token*.
+Bear in mind that the *Token* will expire within 15 minutes and that at each succesful request a new token is returned using the same *Token* header, so, at each interaction between client server, just making an authenticated and succesful request, will give you back a way of continuing to make **authenticated requests** without the extra overhead of an authentication for each one and without having to keep long expiry times for the *Token*.
+
+Keep in mind that the Token, if decoded, bears the information about the expiration time as part of the payload.
+
+#### Authenticated Requests
+
+Once the JWT has been retrieved, the **Authenticated Request**s must use it in a header of Bearer Type like this one:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1OTA3NzQyMzR9.Z-1yECp55VD560UcB7gIhgVWJNjn8HUerG5s4TVSRko
+```
 
 ### Info API
 
@@ -188,15 +204,14 @@ The *methods* key will list the **custom actions** that can be used in addition 
 ## Testing
 
 If you want to manually test the API using [Insomnia](https://insomnia.rest/) you can find the chained request in Insomnia v4 json format inside the **test/insomnia** folder.
-In the next few days, I'll publish also the rspec tests.
+Once loaded the tests inside the insomnia application, please right click on the folder, then in the menu select *</> Environment* and change ```base_url```, ```email``` and ```password``` as needed to set them for all the subsequent actions.
 
 ## TODO
 
 * Integrate a settings gem
-* Add DSL for users and roles
 
 ## References
-THanks to all these people for ideas:
+Thanks to all these people for ideas:
 
 * [Billy Cheng](https://medium.com/@billy.sf.cheng/a-rails-6-application-part-1-api-1ee5ccf7ed01) For a way to have a nice and clean implementation of the JWT on top of Devise.
 * [Daniel](https://medium.com/@tdaniel/passing-refreshed-jwts-from-rails-api-using-headers-859f1cfe88e9) For a smart way to manage token expiration.
