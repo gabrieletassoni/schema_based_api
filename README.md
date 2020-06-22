@@ -6,28 +6,15 @@ To have a comprehensive and meaningful Model driven API right out of the box by 
 
 ## TL;DR 5-10 minutes adoption
 
-1. Add this line to your application's Gemfile or as a dependency for your engine gem:
-  ```ruby
-  gem 'model_driven_api'
-  ```
-2. Run from the shell:
-  ```bash
-  $ bundle
-  ```
-3. Add needed models, like:
-  ```bash
+1. Add this line to your application's Gemfile or as a dependency for your engine gem: ```gem 'model_driven_api'```
+2. Run from the shell: ```bundle```
+3. Add needed models, like: ```bash
   $ rails g migration AddLocation name:string:index description:text:index
   $ rails g migration AddProduct name:string:index code:string:uniq location:references
   $ # Any other migration(s) you need... 
   ``` 
-4. Run the migrations:
-  ```bash
-  $ rails db:migrate
-  ```
-5. Bring up your dev server:
- ```bash
- $ rails s
- ```
+4. Run the migrations: ```rails db:migrate```
+5. Bring up your dev server: ```rails s```
 6. Use **Insomnia** rest client to try the endpoints by importing ```test/insomnia/ApiV2Tests.json``` and editing the environment variables as needed.
 
 This will setup a *User* model, *Role* model, *Permissions* model and the HABTM table between these + any added model you created at the step 3.
