@@ -1,5 +1,9 @@
 # Model Driven Api
 
+## Goal
+
+To have a comprehensive and meaningful Model driven API right out of the box by just creating migrations in your rails app or engine. With all the CRUD operations in place out of the box and easily expandable with custom actions if needed.
+
 ## TL;DR 5-10 minutes adoption
 
 1. Add this line to your application's Gemfile or as a dependency for your engine gem:
@@ -35,11 +39,7 @@ I've always been interested in effortless, no-fuss, conventions' based developme
 
 Doing this means also narrowing a bit the scope of the tools, taking decisions, at least for the first implementations and versions of this engine, so, this works well if the data is relational, this is a prerequisite (postgres, mysql, mssql, etc.).
 
-# Goal
-
-To have a comprehensive and meaningful Model driven API right out of the box by just creating migrations in your rails app or engine. With all the CRUD operations in place out of the box and easily expandable with custom actions if needed.
-
-# v2?
+## v2?
 
 Yes, this is the second version of such an effort and you can note it from the api calls, which are all under the ```/api/v2``` namespace the [/api/v1](https://github.com/gabrieletassoni/thecore_api) one, was were it all started, many ideas are ported from there, such as the generation of the automatic model based crud actions, as well as custom actions definitions and all the things that make also this gem useful for my daily job were already in place, but it was too coupled with [thecore](https://github.com/gabrieletassoni/thecore)'s [rails_admin](https://github.com/sferik/rails_admin) UI, making it impossible to create a complete UI-less, API only application, out of the box and directly based of the DB schema, with all the bells and whistles I needed (mainly self adapting, data and schema driven API functionalities).
 So it all began again, making a better thecore_api gem into this model_driven_api gem, more polished, more functional and self contained.
@@ -50,7 +50,7 @@ So it all began again, making a better thecore_api gem into this model_driven_ap
 * **Custom actions** defined in model's concerns now are triggered by a do querystring, for example: ```/api/v2/:model?do=custom_action``` or ```/api/v2/:model/:id?do=custom_action```
 * Searches using Ransack can be done either by GET or POST, but POST is preferred.
 
-# Standards Used
+## Standards Used
 
 * [JWT](https://github.com/jwt/ruby-jwt) for authentication.
 * [CanCanCan](https://github.com/CanCanCommunity/cancancan) for authorization.
