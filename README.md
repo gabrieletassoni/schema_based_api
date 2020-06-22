@@ -5,7 +5,7 @@ Doing this means also narrowing a bit the scope of the tools, taking decisions, 
 
 # Goal
 
-To have a comprehensive and meaningful API right out of the box by just creating migrations in your rails app or engine.
+To have a comprehensive and meaningful Model driven API right out of the box by just creating migrations in your rails app or engine. With all the CRUD operations in place out of the box and easily expandable with custom actions if needed.
 
 # v2?
 
@@ -25,37 +25,50 @@ So it all began again, making a better thecore_api gem into this model_driven_ap
 * [Ransack](https://github.com/activerecord-hackery/ransack) query engine for complex searches going beyond CRUD's listing scope.
 * Catch all routing rule to automatically add basic crud operations to any AR model in the app.
 
-## Usage
-How to use my plugin.
+## TL;DR 5-10 minutes adoption
 
-## Installation
-Add this line to your application's Gemfile:
+1. Add this line to your application's Gemfile or as a dependency for your engine gem:
+  ```ruby
+  gem 'model_driven_api'
+  ```
+2. Run from the shell:
+  ```bash
+  $ bundle
+  ```
+3. Add needed models, like:
+  ```bash
+  $ rails g migration AddLocation name:string:index description:text:index
+  $ rails g migration AddProduct name:string:index code:string:uniq location:references
+  $ # Any other migration(s) you need... 
+  ``` 
+4. Run the migrations:
+  ```bash
+  $ rails db:migrate
+  ```
+5. Bring up your dev server:
+ ```bash
+ $ rails s
+ ```
+6. Use **Insomnia** rest client to try the endpoints by importing ```test/insomnia/ApiV2Tests.json``` and editing the environment variables as needed.
 
-```ruby
-gem 'model_driven_api'
-```
+This will setup a *User* model, *Role* model, *Permissions* model and the HABTM table between these + any added model you created at the step 3.
 
-And then execute:
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-```bash
-$ gem install model_driven_api
-```
-
-Then run the migrations:
-```bash
-$ rails db:migrate
-```
-
-This will setup a User model, Role model and the HABTM table between the two.
-
-Then, if you fire up your ```rails server``` you can already get a jwt and perform different operations.
 The default admin user created during the migration step has a randomly generated password you can find in a .passwords file in the root of your project, that's the initial password, in production you can replace that one, but for testing it proved handy to have it promptly available.
 
-## Consuming the API
+## API
+
+All the **Models** of *WebApp* follow the same endpoint specification as a standard. The only deviations to the normally expected **CRUD** endpoints are for the **authenticate** controller and the **info** controller described below. This is due to their specific nature, which is not the common **CRUD** interaction, but to provide specifically a way to retrieve the **[JWT](https://jwt.io/)** or retrieve low level information on the **structure** of the API.
+
+### Return Values
+
+The expected return values are:
+
+ - **200** *success*: the request performed the expected action.
+ - **401** *unauthenticated*: username, password or token are invalid.
+ - **403** *unauthorized*: the user performing the action is authenticated, but doesn't have the permission to perform it.
+ - **404** *not found*: the record or custom action is not present in the 
+ - **422** *invalid*: the specified body of the request has not passed the validations for the model.
+ - **500** *errors on the platform*: usually this means you found a bug in the code.
 
 ### Getting the Token
 
@@ -76,8 +89,8 @@ with a POST body like the one below:
 }
 ```
 
-This action will return in the header a *Token* you can use for the following requests.
-Bear in mind that the *Token* will expire within 15 minutes and that at each succesful request a new token is returned using the same *Token* header, so, at each interaction between client server, just making an authenticated and succesful request, will give you back a way of continuing to make **authenticated requests** without the extra overhead of an authentication for each one and without having to keep long expiry times for the *Token*.
+This action will return in the **header** a *Token* you can use for the following requests.
+Bear in mind that the *Token* will expire within 15 minutes and that at **each successful** request a ***new*** token is returned using the same **header**, so, at each interaction between client server, just making an authenticated and successful request, will give you back a way of continuing to make **authenticated requests** without the extra overhead of an authentication for each one and without having to keep long expiry times for the *Token*.
 
 Keep in mind that the Token, if decoded, bears the information about the expiration time as part of the payload.
 
@@ -89,14 +102,114 @@ Once the JWT has been retrieved, the **Authenticated Request**s must use it in a
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1OTA3NzQyMzR9.Z-1yECp55VD560UcB7gIhgVWJNjn8HUerG5s4TVSRko
 ```
 
+### CRUD Actions
+
+All the interactions with the **Models** are **Authenticated Request** (see below for reference on **Getting the Token**), all the models have the following six **CRUD** actions and the **custom** actions defined for them in addition (see below for reference to custom actions in the **Schema** section of the **Info** controller):
+
+#### List
+
+Returns a list of all the records for the models specified by the expected fields as per **DSL** section below.
+Example request for **users** model:
+
+```bash
+GET http://localhost:3000/api/v2/users
+```
+
+#### Search
+
+Returns a list of all the records for the models specified by the expected fields as per **DSL** section below, the returned records are **filtered** by the **search predicates** you can find in the body of the request:
+Example request for **users** model:
+
+```bash
+POST http://localhost:3000/api/v2/users/search
+```
+
+Example of the body of the request (*q* means **question**, the *_eq* particle means **equals**, so in this simple example I'm looking for records which have the *id* attribute set to 1, mimicking the **Show** action below):
+
+```json
+{
+  "q":{
+    "id_eq": 1
+  }
+}
+```
+
+The complete documentation of the predicates that can be used is provided by the **[Ransack](https://github.com/activerecord-hackery/ransack)** library, the filtering, ordering, grouping options are really infinite.
+
+#### Create
+
+Creates a record for the specified **Model**.
+Validations on the data sent are triggered.
+Example request for **users** model:
+
+```bash
+POST http://localhost:3000/api/v2/users
+```
+
+Example of the body of the request:
+
+```json
+{
+  "user":  {
+    "email": "prova@example.com",
+    "admin": false,
+    "password": "prova63562",
+    "password_confirmation": "prova63562"
+  }
+}
+```
+
+#### Show
+
+Retrieves a single record as specified by the expected fields as per **DSL** section below.
+Example request for **users** model (retrieves the record with ID = 1):
+
+```bash
+GET http://localhost:3000/api/v2/users/1
+```
+
+#### Edit
+
+Changes the value of one or more attributes for the specified model. In the body of the PUT request you can just use the attributes you want to change, it's **not** necessary to use all the attributes of the record.
+Example request for **users** model with ID = 1:
+
+```bash
+PUT http://localhost:3000/api/v2/users/1
+```
+
+Example of the body of the request:
+
+```json
+{
+  "user": {
+    "email": "ciao@example.com"
+  }
+}
+```
+
+#### Delete
+
+Deletes the specified record.
+Example request for **users** model with ID = 1:
+
+```bash
+DELETE http://localhost:3000/api/v2/users/1
+```
+
+#### Custom Actions
+
+Are triggered by a **do** querystring, for example: `GET /api/v2/:model?do=custom_action` or `GET /api/v2/:model/:id?do=custom_action` respectively for a custom action which works on the entire records collection or a custom action which works on the specific record identified by :id.
+
 ### Info API
 
-The info API **api/v2/info/** can be used to retrieve general information about the REST API:
+The info API **/api/v2/info/** can be used to retrieve general information about the REST API.
 
 #### Version
 
-By issuing a GET on this api, you will get a response containing the version of the model_driven_api. 
-This is a request which doesn't require authentication, it could be used as a checkpoint for consuming the resources exposed by this engine.
+By issuing a GET on this api, you will get a response containing the version of *WebApp*. 
+This is a request which **doesn't require authentication**, it could be used as a checkpoint for consuming the resources exposed by this engine.
+
+Example:
 
 ```bash
 GET http://localhost:3000/api/v2/info/version
@@ -141,7 +254,7 @@ Something like this can be retrieved:
 
 #### Schema
 
-**Authenticated Request** This action will send back the *authorized* models accessible by the current user at least for the [:read ability](https://github.com/ryanb/cancan/wiki/checking-abilities). The list will also show the field types of the model and the associations.
+**Authenticated Request** This action will send back the *authorized* models accessible by the **User** owner of the *Token* at least for the [:read ability](https://github.com/ryanb/cancan/wiki/checking-abilities). The list will also show the field types of the model and the associations.
 
 By issuing this GET request:
 
@@ -199,7 +312,118 @@ You will get something like:
 }
 ```
 
-The *methods* key will list the **custom actions** that can be used in addition to normal CRUD operations, these can be bulk actions and anything that can serve a purpose, usually to simplify the interaction between client and server (i.e. getting in one request the result of a complex computations which usually would be sorted out using more requests). Later on this topic.
+The ***associations***: key lists the relations between each model and the associated models, be them a n:1 (belongs_to) or a n:m (has_many) one.
+The ***methods*** key will list the **custom actions** that can be used in addition to normal CRUD operations, these are usually **bulk actions** or any computation that can serve a specific purpose outside the basic CRUD scope used usually to simplify the interaction between client and server (i.e. getting in one request the result of a complex computations which usually would be sorted out using more requests).
+
+#### DSL
+
+**Authenticated Request** This action will send back, for each model, which are the fields to be expected in the returning JSON of each request which has a returning value.
+This information can complement the **Schema** action above output by giving information on what to expect as returned fields, associations and aggregates (methods) from each **READ** action of the **CRUD**.  It can be used both to *validate* the returned values of a **LIST** or a **SHOW** or to *drive* UI generation of the clients.
+
+By issuing this GET request:
+
+```bash
+GET http://localhost:3000/api/v2/info/dsl
+```
+
+You will get something like:
+
+```json
+{
+  "users": {
+    "except": [
+      "lock_version",
+      "created_at",
+      "updated_at"
+    ],
+    "include": [
+      "roles"
+    ]
+  },
+  "roles": {
+    "except": [
+      "lock_version",
+      "created_at",
+      "updated_at"
+    ],
+    "include": [
+      {
+        "users": {
+          "only": [
+            "id"
+          ]
+        }
+      }
+    ]
+  },
+  "role_users": null
+}
+```
+
+#### Translations
+
+**Authenticated Request** This action will send back, all the **translations** of *model* names, *attribute* names and any other translation defined in the backend.
+This can be used by the UI clients to be aligned with the translations found in the Backend.
+The locale for which the translation is requested can be specified by the querystring *locale*, it defaults to **it**.
+For **Model** translations, the ones used more, the key to look for is ***activerecord*** and subkeys **models** and **attributes**.
+
+By issuing this GET request:
+
+```bash
+GET http://localhost:3000/api/v2/info/translations?locale=it
+```
+
+You will get smething like (incomplete for briefness):
+
+```json
+{
+  "activerecord": {
+    "attributes": {
+      "user": {
+        "confirmation_sent_at": "Conferma inviata a",
+        "confirmation_token": "Token di conferma",
+        "confirmed_at": "Confermato il",
+        "created_at": "Data di Creazione",
+        "current_password": "Password corrente",
+        "current_sign_in_at": "Accesso corrente il",
+        "current_sign_in_ip": "IP accesso corrente",
+        "email": "E-Mail",
+        "encrypted_password": "Password criptata",
+        "failed_attempts": "Tentativi falliti",
+        "last_sign_in_at": "Ultimo accesso il",
+        "last_sign_in_ip": "Ultimo IP di accesso",
+        "locked_at": "Bloccato il",
+        "password": "Password",
+        "password_confirmation": "Conferma Password",
+        "remember_created_at": "Ricordami creato il",
+        "remember_me": "Ricordami",
+        "reset_password_sent_at": "Reset password inviata a",
+        "reset_password_token": "Token di reset password",
+        "sign_in_count": "Numero di accessi",
+        "unconfirmed_email": "Email non confermata",
+        "unlock_token": "Token di sblocco",
+        "updated_at": "Aggiornato il",
+        "username": "Nome Utente",
+        "code": "Codice",
+        "roles": "Ruoli",
+        "admin": "Amministratore?",
+        "locked": "Bloccato?",
+        "third_party": "Ente Terzo?"
+      },
+      "role": {
+        "users": "Utenti",
+        "name": "Nome",
+        "permissions": "Permessi"
+      },
+      "permission": {
+        "predicate": "Predicato",
+        "action": "Azione",
+        "model": "Modello"
+      },
+
+      [ ... ]
+}
+```
 
 ## Testing
 
