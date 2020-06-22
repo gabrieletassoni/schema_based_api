@@ -8,10 +8,11 @@ To have a comprehensive and meaningful Model driven API right out of the box by 
 
 1. Add this line to your application's Gemfile or as a dependency for your engine gem: ```gem 'model_driven_api'```
 2. Run from the shell: ```bundle```
-3. Add needed models, like: ```bash
-  $ rails g migration AddLocation name:string:index description:text:index
-  $ rails g migration AddProduct name:string:index code:string:uniq location:references
-  $ # Any other migration(s) you need... 
+3. Add needed models, like: 
+  ```bash
+  rails g migration AddLocation name:string:index description:text:index
+  rails g migration AddProduct name:string:index code:string:uniq location:references
+  # Any other migration(s) you need... 
   ``` 
 4. Run the migrations: ```rails db:migrate```
 5. Bring up your dev server: ```rails s```
