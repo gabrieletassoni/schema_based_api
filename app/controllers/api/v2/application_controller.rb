@@ -79,7 +79,7 @@ class Api::V2::ApplicationController < ActionController::API
         return render json: result, status: 200 if status == true
 
         # Normal Update Action
-        @record.update_attributes!(@body)
+        @record.update!(@body)
         render json: @record.to_json(json_attrs), status: 200
     end
     
