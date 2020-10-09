@@ -16,7 +16,7 @@ To have a comprehensive and meaningful Model driven API right out of the box by 
   ``` 
 4. Run the migrations: ```rails db:migrate```
 5. Bring up your dev server: ```rails s```
-6. Use **Insomnia** rest client to try the endpoints by importing ```test/insomnia/ApiV2Tests.json``` and editing the environment variables as needed.
+6. Use **[Insomnia](https://github.com/Kong/insomnia)** rest client to try the endpoints by importing [the API v2 tests](test/insomnia/ApiV2Tests.json) and editing the environment variables as needed.
 
 This will setup a *User* model, *Role* model, *Permissions* model and the HABTM table between these + any added model you created at the step 3.
 
