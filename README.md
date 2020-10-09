@@ -422,7 +422,7 @@ Once loaded the tests inside the insomnia application, please right click on the
 
 ## TODO
 
-* Integrate a settings gem
+* Add a Trust management for API consumers, to have some low level interactions happen between API client and server done without the need for giving a USERNAME and a PASSWORD.
 
 ## References
 Thanks to all these people for ideas:
