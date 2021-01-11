@@ -21,7 +21,7 @@ class Api::V2::ApplicationController < ActionController::API
 
         # Normal Index Action with Ransack querying
         @q = (@model.column_names.include?("user_id") ? @model.where(user_id: current_user.id) : @model).ransack(@query.presence|| params[:q])
-        @records_all = @q.result(distinct: true)
+        @records_all = @q.result # (distinct: true) Removing, but I'm not sure, with it I cannot sort in postgres for associated records (throws an exception on misuse of sort with distinct)
         page = (@page.presence || params[:page])
         per = (@per.presence || params[:per])
         pages_info = (@pages_info.presence || params[:pages_info])
