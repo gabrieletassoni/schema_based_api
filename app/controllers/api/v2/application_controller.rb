@@ -112,10 +112,27 @@ class Api::V2::ApplicationController < ActionController::API
         # if it's here there is no custom action in the request querystring
         return false
     end
+
+    def class_exists?(class_name)
+        klass = Module.const_get(class_name)
+        return klass.is_a?(Class)
+    rescue NameError
+        return false
+    end
     
     def authenticate_request
-        @current_user = AuthorizeApiRequest.call(request.headers).result
-        return unauthenticated! unless @current_user
+        # puts request.headers.inspect
+        @current_user = nil
+        Settings.ns(:security).allowed_authorization_headers.split(",").each do |header|
+            # puts request.headers[header.underscore.dasherize] 
+            check_authorization("Authorize#{header}".constantize.call(request.headers, request.raw_post)) if request.headers[header.underscore.dasherize]
+        end
+        return unauthenticated!(OpenStruct.new({message: @auth_errors})) unless @current_user
+        
+        # This is the default one, if the header doesn't have a valid form for one of the other Auth methods, then use this Auth Class
+        check_authorization AuthorizeApiRequest.call(request.headers) unless @current_user
+        return unauthenticated!(OpenStruct.new({message: @auth_errors})) unless @current_user
+        
         current_user = @current_user
         params[:current_user_id] = @current_user.id
         # Now every time the user fires off a successful GET request, 
@@ -145,6 +162,14 @@ class Api::V2::ApplicationController < ActionController::API
         @body = params[@model.model_name.singular].presence || params[@model.model_name.route_key]
         # Only ActiveRecords can have this model caputed 
         return not_found! if (!@model.new.is_a? ActiveRecord::Base rescue false)
+    end
+
+    def check_authorization cmd
+        if cmd.success?
+            @current_user = cmd.result 
+        else
+            @auth_errors = cmd.errors
+        end
     end
 
     # Nullifying strong params for API
