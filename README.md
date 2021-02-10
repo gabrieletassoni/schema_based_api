@@ -422,7 +422,7 @@ Once loaded the tests inside the insomnia application, please right click on the
 
 ## TODO
 
-* Add a Trust management for API consumers, to have some low level interactions happen between API client and server done without the need for giving a USERNAME and a PASSWORD.
+* Document the new feature (from version 2.3.3) to add Authentication methods which override the JWT described above. Useful for Webhooks and machine2machine trusted dialogues.
 
 ## References
 Thanks to all these people for ideas:
