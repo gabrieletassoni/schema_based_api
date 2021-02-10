@@ -107,7 +107,8 @@ class Api::V2::ApplicationController < ActionController::API
             # call an unwanted method in the AR Model.
             resource = "custom_action_#{params[:do]}"
             raise NoMethodError unless @model.respond_to?(resource)
-            return true, MultiJson.dump(params[:id].blank? ? @model.send(resource, params) : @model.send(resource, params[:id].to_i, params))
+            # return true, MultiJson.dump(params[:id].blank? ? @model.send(resource, params) : @model.send(resource, params[:id].to_i, params))
+            return true, MultiJson.dump(@model.send(resource, params))
         end
         # if it's here there is no custom action in the request querystring
         return false
@@ -123,8 +124,9 @@ class Api::V2::ApplicationController < ActionController::API
     def authenticate_request
         # puts request.headers.inspect
         @current_user = nil
+        # puts "Are there wbehooks headers to check for? #{Settings.ns(:security).allowed_authorization_headers}"
         Settings.ns(:security).allowed_authorization_headers.split(",").each do |header|
-            # puts request.headers[header.underscore.dasherize] 
+            # puts "Found header #{header}: #{request.headers[header.underscore.dasherize]}" 
             check_authorization("Authorize#{header}".constantize.call(request.headers, request.raw_post)) if request.headers[header.underscore.dasherize]
         end
         return unauthenticated!(OpenStruct.new({message: @auth_errors})) unless @current_user
