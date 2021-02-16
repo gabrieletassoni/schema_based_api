@@ -2,13 +2,15 @@ module ApiExceptionManagement
     extend ActiveSupport::Concern
     
     included do
-        rescue_from NoMethodError, with: :not_found!
-        rescue_from CanCan::AccessDenied, with: :unauthorized!
-        rescue_from AuthenticateUser::AccessDenied, with: :unauthenticated!
-        rescue_from ActionController::RoutingError, with: :not_found!
-        rescue_from ActiveModel::ForbiddenAttributesError, with: :fivehundred!
-        rescue_from ActiveRecord::RecordInvalid, with: :invalid!
-        rescue_from ActiveRecord::RecordNotFound, with: :not_found!
+        if Rails.env.production?
+            rescue_from NoMethodError, with: :not_found!
+            rescue_from CanCan::AccessDenied, with: :unauthorized!
+            rescue_from AuthenticateUser::AccessDenied, with: :unauthenticated!
+            rescue_from ActionController::RoutingError, with: :not_found!
+            rescue_from ActiveModel::ForbiddenAttributesError, with: :fivehundred!
+            rescue_from ActiveRecord::RecordInvalid, with: :invalid!
+            rescue_from ActiveRecord::RecordNotFound, with: :not_found!
+        end
         
         def unauthenticated! exception = AuthenticateUser::AccessDenied.new
             response.headers['WWW-Authenticate'] = "Token realm=Application"
